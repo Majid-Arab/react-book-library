@@ -7,24 +7,26 @@ import {
   Modal,
   NumberInput,
 } from "@mantine/core";
-import { useState } from "react";
-import { Books } from "./Interfaces";
+import { ChangeEvent, useRef, useState } from "react";
+import { Book } from "./Interfaces";
 import { theme } from "./theme";
 
 export default function App() {
+
   const [opened, setOpened] = useState(false);
-  const [updateOpened, setUpdateOpened] = useState(false);
-  const [books, setBooks] = useState<Books[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+
   const [book, setBook] = useState("");
   const [author, setAuthor] = useState("");
+
   const [price, setPrice] = useState(0);
 
-  const newBook: Books = {
-    bookName: book,
-    authorName: author,
-    bookPrice: price,
-  };
   const addData = () => {
+    const newBook: Book = {
+      bookName: book,
+      authorName: author,
+      bookPrice: price,
+    };
     console.log(newBook)
     setBooks([...books, newBook]);
     setBook("");
@@ -33,10 +35,25 @@ export default function App() {
     setPrice(0);
   };
 
-  const updateData = () => {
-    const updateBook = newBook.bookName.valueOf
-    console.log(updateBook)
+  const updateData = (book: Book) => {
+    setOpened(true)
+    setBook(book.bookName)
+    setAuthor(book.authorName)
+    setPrice(book.bookPrice)
   }
+
+  // const removeBook = (index: number) => {
+  //   const delBook = [...books];
+  //   delBook.splice(index, 1);
+  // }
+
+  const removeBook = (bookNameToDelete: string): void => {
+    setBooks(
+      books.filter((del) => {
+        return del.bookName != bookNameToDelete;
+      })
+    );
+  };
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
@@ -46,6 +63,7 @@ export default function App() {
       <Modal opened={opened} onClose={() => setOpened(false)}>
         <form>
           <div style={{ display: "flex" }}>
+
             <h1>Add form</h1>
             <TextInput
               placeholder="Book name"
@@ -72,7 +90,7 @@ export default function App() {
               onChange={(val: number) => setPrice(val)}
             />
           </div>
-          <Button onClick={updateData}>Add Book</Button>
+          <Button onClick={addData}>Add Book</Button>
         </form>
       </Modal>
 
@@ -80,23 +98,7 @@ export default function App() {
         <Button onClick={() => setOpened(true)}>Add Book Deatils</Button>
       </Group>
 
-      {/* Update Modal  */}
-
-      <Modal opened={updateOpened} onClose={() => setUpdateOpened(false)}>
-        {/* Modal content */}
-        <form>
-          <div style={{ display: "flex" }}>
-            <TextInput placeholder="Book name" name="book_name" label="Book name" />
-
-            <TextInput placeholder="Author name" name="author_name" label="Author name" />
-
-            <NumberInput placeholder="Book Price" name="book_price" label="Price" />
-          </div>
-          <Button onClick={addData}>Add Book</Button>
-        </form>
-      </Modal>
-
-      <Table>
+      <Table id="table">
         <thead>
           <tr>
             <th>Book Name</th>
@@ -106,14 +108,19 @@ export default function App() {
           </tr>
         </thead>
         <tbody>
-          {books.map((book: Books, key: number) => (
+          {books.map((book: Book, key: number) => (
             <tr key={key}>
               <td >{book.bookName}</td>
               <td>{book.authorName}</td>
               <td>{book.bookPrice}</td>
               <td>
-                <Button onClick={() => setUpdateOpened(true)}>
+                <Button onClick={() => updateData(book)}>
                   Update Modal
+                </Button>
+                <Button onClick={() => {
+                  removeBook(book.bookName);
+                }} variant="outline" ml={10} color="red">
+                  Delete
                 </Button>
               </td>
             </tr>
