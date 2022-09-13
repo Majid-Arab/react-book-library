@@ -19,17 +19,19 @@ interface Props {
 
 export function Home({ books, remove }: Props) {
 
-
+  const [book, setBook] = useState("");
+  const [author, setAuthor] = useState("");
+  const [price, setPrice] = useState(0);
 
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navigate('/addTodo'), [navigate]);
+  const handleUpdateOnClick = useCallback((book:Book) => navigate('/UpdateTodo',{state:book}), [navigate]);
 
-  const updateData = (book: Book) => {
-    // setOpened(true)
-    // setBook(book.bookName)
-    // setAuthor(book.authorName)
-    // setPrice(book.bookPrice)
-  }
+  // const updateData = (book: Book) => {
+  //   setBook(book.bookName)
+  //   setAuthor(book.authorName)
+  //   setPrice(book.bookPrice)
+  // }
 
 
   return (
@@ -54,7 +56,7 @@ export function Home({ books, remove }: Props) {
               <td>{book.authorName}</td>
               <td>{book.bookPrice}</td>
               <td>
-                <Button onClick={() => updateData(book)}>
+                <Button onClick={()=>handleUpdateOnClick(book)}>
                   Update Modal
                 </Button>
                 <Button onClick={() => {

@@ -12,6 +12,7 @@ import { Book } from "../Interfaces";
 interface Props {
   add: (book: Book) => void
 }
+
 export function AddTodo({ add }: Props) {
   const [book, setBook] = useState("");
   const [author, setAuthor] = useState("");
@@ -19,7 +20,7 @@ export function AddTodo({ add }: Props) {
   const [price, setPrice] = useState(0);
   const navigate = useNavigate();
   function addBook(){
-    add({ bookName: book, authorName: author, bookPrice: price }); navigate('/')
+    add({ id:0,bookName: book, authorName: author, bookPrice: price }); navigate('/')
   }
 
   return (
