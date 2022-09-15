@@ -1,33 +1,32 @@
 import { Button, NumberInput, TextInput } from '@mantine/core';
-import React, { useEffect, useState } from 'react'
-import { useNavigate,useLocation } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
+import { BookCtx } from '../context/BookContext';
+import { ProviderProp } from '../context/NoteContext';
 import { Book } from '../Interfaces'
 
-interface Props {
-  update: (book: Book) => void
-}
 
-export function UpdateTodo({ update }: Props) {
-
+export function UpdateTodo() {
+  const {updateBook} = useContext(BookCtx)
   const [book, setBook] = useState("");
   const [author, setAuthor] = useState("");
 
   const [price, setPrice] = useState(0);
   const navigate = useNavigate();
-  const {state} = useLocation();
+  const { state } = useLocation();
   const bookToUpdate = state as Book
   useEffect(() => {
     setBook(bookToUpdate.bookName)
     setAuthor(bookToUpdate.authorName)
     setPrice(bookToUpdate.bookPrice)
   }, [location])
-  
-  function updateBook() {
 
-    update(
-      { id:bookToUpdate.id,bookName:book, authorName: author, bookPrice: price },
+  function update() {
+
+    updateBook(
+      { id: bookToUpdate.id, bookName: book, authorName: author, bookPrice: price },
     );
-     navigate('/')
+    navigate('/')
   }
 
   return (
@@ -60,7 +59,7 @@ export function UpdateTodo({ update }: Props) {
           onChange={(val: number) => setPrice(val)}
         />
       </div>
-      <Button onClick={updateBook}>Update Book</Button>
+      <Button onClick={update}>Update Book</Button>
     </form>
   )
 }

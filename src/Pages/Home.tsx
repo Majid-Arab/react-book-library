@@ -1,5 +1,5 @@
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import {
   MantineProvider,
   Table,
@@ -11,29 +11,15 @@ import {
 } from "@mantine/core";
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../Interfaces';
+import { BookCtx } from '../context/BookContext';
 
-interface Props {
-  books: Book[]
-  remove: (bookNameToDelete: string) => void;
-}
 
-export function Home({ books, remove }: Props) {
 
-  const [book, setBook] = useState("");
-  const [author, setAuthor] = useState("");
-  const [price, setPrice] = useState(0);
-
+export function Home() {
+  const {books,removeBook}= useContext(BookCtx)
   const navigate = useNavigate();
   const handleOnClick = useCallback(() => navigate('/addTodo'), [navigate]);
   const handleUpdateOnClick = useCallback((book:Book) => navigate('/UpdateTodo',{state:book}), [navigate]);
-
-  // const updateData = (book: Book) => {
-  //   setBook(book.bookName)
-  //   setAuthor(book.authorName)
-  //   setPrice(book.bookPrice)
-  // }
-
-
   return (
     <>
       <Group position="center">
@@ -60,7 +46,7 @@ export function Home({ books, remove }: Props) {
                   Update Modal
                 </Button>
                 <Button onClick={() => {
-                  remove(book.bookName);
+                  removeBook(book.id);
                 }} variant="outline" ml={10} color="red">
                   Delete
                 </Button>

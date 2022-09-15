@@ -1,26 +1,23 @@
 import {
-  MantineProvider,
-  Table,
-  Group,
   Button,
   TextInput,
-  Modal,
   NumberInput,
-} from "@mantine/core"; import React, { useCallback, useState } from 'react'
+} from "@mantine/core";
+import { useContext, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { Book } from "../Interfaces";
-interface Props {
-  add: (book: Book) => void
-}
+import { BookCtx } from "../context/BookContext";
 
-export function AddTodo({ add }: Props) {
+
+export function AddTodo() {
+  const { addBook } = useContext(BookCtx)
   const [book, setBook] = useState("");
   const [author, setAuthor] = useState("");
 
   const [price, setPrice] = useState(0);
   const navigate = useNavigate();
-  function addBook(){
-    add({ id:0,bookName: book, authorName: author, bookPrice: price }); navigate('/')
+  function add() {
+    addBook({ id: 0, bookName: book, authorName: author, bookPrice: price });
+    navigate('/')
   }
 
   return (
@@ -53,7 +50,7 @@ export function AddTodo({ add }: Props) {
           onChange={(val: number) => setPrice(val)}
         />
       </div>
-      <Button onClick={addBook}>Add Book</Button>
+      <Button onClick={add}>Add Book</Button>
     </form>
 
   )
